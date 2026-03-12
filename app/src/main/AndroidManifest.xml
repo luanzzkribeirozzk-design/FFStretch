@@ -9,7 +9,7 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher"
         android:supportsRtl="true"
-        android:theme="@style/Theme.FFStretch">
+        android:theme="@style/Theme.LNStretch">
 
         <activity
             android:name=".MainActivity"
