@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <style name="Theme.FFStretch" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+    <style name="Theme.LNStretch" parent="Theme.MaterialComponents.DayNight.NoActionBar">
         <item name="colorPrimary">#FF4500</item>
         <item name="colorPrimaryVariant">#CC3300</item>
         <item name="colorOnPrimary">#FFFFFF</item>
