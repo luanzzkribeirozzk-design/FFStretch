@@ -18,7 +18,7 @@ class StretchService : Service() {
     }
 
     private fun buildNotification(): Notification {
-        return Notification.Builder(this, "ffstretch_channel")
+        return Notification.Builder(this, "lnstretch_channel")
             .setContentTitle("LN Stretch Ativo")
             .setContentText("Tela esticada para Free Fire")
             .setSmallIcon(android.R.drawable.ic_menu_zoom)
@@ -27,7 +27,7 @@ class StretchService : Service() {
 
     private fun createNotificationChannel() {
         val channel = NotificationChannel(
-            "ffstretch_channel",
+            "lnstretch_channel",
             "LN Stretch",
             NotificationManager.IMPORTANCE_LOW
         )
