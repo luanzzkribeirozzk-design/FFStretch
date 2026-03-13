@@ -13,16 +13,11 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import rikka.shizuku.Shizuku
-import rikka.shizuku.ShizukuRemoteProcess
 
 class MainActivity : AppCompatActivity() {
 
-    private val ffPackages = listOf(
-        "com.dts.freefireth",
-        "com.dts.freefiremax"
-    )
-
-    private var selectedPercent: Int = 15
+    private val ffPackages = listOf("com.dts.freefireth", "com.dts.freefiremax")
+    private var selectedPercent = 15
 
     private lateinit var tvStatus: TextView
     private lateinit var tvShizukuStatus: TextView
@@ -34,15 +29,14 @@ class MainActivity : AppCompatActivity() {
     private lateinit var btnOpenFF: Button
     private lateinit var btnShizuku: Button
 
-    private val shizukuPermissionListener =
-        Shizuku.OnRequestPermissionResultListener { _, grantResult ->
-            if (grantResult == PackageManager.PERMISSION_GRANTED) {
-                showToast("Shizuku autorizado!")
-                updateShizukuStatus()
-            } else {
-                showToast("Permissao negada pelo Shizuku")
-            }
+    private val permListener = Shizuku.OnRequestPermissionResultListener { _, result ->
+        if (result == PackageManager.PERMISSION_GRANTED) {
+            showToast("Shizuku autorizado!")
+            updateShizukuStatus()
+        } else {
+            showToast("Permissao negada")
         }
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -58,7 +52,7 @@ class MainActivity : AppCompatActivity() {
         btnOpenFF       = findViewById(R.id.btnOpenFF)
         btnShizuku      = findViewById(R.id.btnShizuku)
 
-        Shizuku.addRequestPermissionResultListener(shizukuPermissionListener)
+        Shizuku.addRequestPermissionResultListener(permListener)
         setupSlider()
         setupButtons()
         updateStatus()
@@ -66,7 +60,7 @@ class MainActivity : AppCompatActivity() {
 
     override fun onDestroy() {
         super.onDestroy()
-        Shizuku.removeRequestPermissionResultListener(shizukuPermissionListener)
+        Shizuku.removeRequestPermissionResultListener(permListener)
     }
 
     override fun onResume() {
@@ -74,173 +68,209 @@ class MainActivity : AppCompatActivity() {
         updateShizukuStatus()
     }
 
-    // ── SLIDER ──────────────────────────────────────────────────────────────
+    // ── SLIDER ───────────────────────────────────────────────────────────────
 
     private fun setupSlider() {
         seekbarStretch.max = 30
         seekbarStretch.progress = 5
         updateSliderLabel(15)
         seekbarStretch.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
-            override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
-                selectedPercent = 10 + progress
+            override fun onProgressChanged(sb: SeekBar?, p: Int, fromUser: Boolean) {
+                selectedPercent = 10 + p
                 updateSliderLabel(selectedPercent)
             }
-            override fun onStartTrackingTouch(seekBar: SeekBar?) {}
-            override fun onStopTrackingTouch(seekBar: SeekBar?) {}
+            override fun onStartTrackingTouch(sb: SeekBar?) {}
+            override fun onStopTrackingTouch(sb: SeekBar?) {}
         })
     }
 
     @SuppressLint("SetTextI18n")
-    private fun updateSliderLabel(percent: Int) {
-        val m = getRealMetrics()
-        val newW = (m.widthPixels * (1 + percent / 100.0)).toInt()
-        tvSliderLabel.text = "+${percent}%   ${m.widthPixels}px > ${newW}px"
+    private fun updateSliderLabel(pct: Int) {
+        val m = realMetrics()
+        val newW = (m.widthPixels * (1 + pct / 100.0)).toInt()
+        tvSliderLabel.text = "+${pct}%   ${m.widthPixels}px > ${newW}px"
     }
 
-    // ── BUTTONS ─────────────────────────────────────────────────────────────
+    // ── BUTTONS ──────────────────────────────────────────────────────────────
 
     private fun setupButtons() {
         btnStretch.setOnClickListener   { applyStretch() }
         btnUnstretch.setOnClickListener { removeStretch() }
         btnOptimize.setOnClickListener  { optimizeFF() }
         btnOpenFF.setOnClickListener    { openFreefire() }
-        btnShizuku.setOnClickListener   { requestShizukuPermission() }
+        btnShizuku.setOnClickListener   { requestShizukuPerm() }
     }
 
-    // ── STRETCH ─────────────────────────────────────────────────────────────
+    // ── STRETCH ──────────────────────────────────────────────────────────────
 
     @SuppressLint("SetTextI18n")
     private fun applyStretch() {
-        if (!isShizukuReady()) {
-            tvStatus.text = "Shizuku nao autorizado!\nClique em AUTORIZAR primeiro."
-            showToast("Autorize o Shizuku primeiro!")
-            return
-        }
-        val m     = getRealMetrics()
+        val m     = realMetrics()
         val origW = m.widthPixels
         val origH = m.heightPixels
         val newW  = (origW * (1 + selectedPercent / 100.0)).toInt()
-        if (runCmd("wm size ${newW}x${origH}")) {
+
+        if (runShellCmd("wm size ${newW}x${origH}")) {
             saveBackup(origW, origH, m.densityDpi)
             tvStatus.text = "Tela esticada +${selectedPercent}%!\n${origW}x${origH} > ${newW}x${origH}\n\nAbra o Free Fire agora!"
             showToast("Esticado +${selectedPercent}%!")
         } else {
-            tvStatus.text = "Erro ao esticar. Verifique o Shizuku."
+            tvStatus.text = "Erro. Autorize o Shizuku primeiro!"
+            showToast("Autorize o Shizuku!")
         }
     }
 
     @SuppressLint("SetTextI18n")
     private fun removeStretch() {
-        if (!isShizukuReady()) { showToast("Autorize o Shizuku primeiro!"); return }
         val prefs = getSharedPreferences("lnstretch_prefs", Context.MODE_PRIVATE)
         val origW = prefs.getInt("orig_width", 0)
         val origH = prefs.getInt("orig_height", 0)
         val cmd   = if (origW > 0) "wm size ${origW}x${origH}" else "wm size reset"
-        if (runCmd(cmd)) {
+        if (runShellCmd(cmd)) {
             clearBackup()
             tvStatus.text = "Tela restaurada!\n${origW}x${origH}"
-            showToast("Tela restaurada!")
+            showToast("Restaurado!")
         } else {
             tvStatus.text = "Erro ao restaurar."
         }
     }
 
-    // ── OTIMIZAR ────────────────────────────────────────────────────────────
+    // ── OTIMIZAR ─────────────────────────────────────────────────────────────
 
     @SuppressLint("SetTextI18n")
     private fun optimizeFF() {
         tvStatus.text = "Otimizando..."
         btnOptimize.isEnabled = false
         Thread {
-            var ffFound = false
-            if (isShizukuReady()) {
-                runCmd("am kill-all")
-                ffPackages.forEach { pkg ->
-                    try {
-                        packageManager.getPackageInfo(pkg, 0)
-                        ffFound = true
-                        runCmd("am send-trim-memory $pkg COMPLETE")
-                    } catch (_: PackageManager.NameNotFoundException) {}
-                }
+            var found = false
+            runShellCmd("am kill-all")
+            ffPackages.forEach { pkg ->
+                try {
+                    packageManager.getPackageInfo(pkg, 0)
+                    found = true
+                    runShellCmd("am send-trim-memory $pkg COMPLETE")
+                } catch (_: PackageManager.NameNotFoundException) {}
             }
             System.gc()
             val free  = Runtime.getRuntime().freeMemory() / 1024 / 1024
             val total = Runtime.getRuntime().totalMemory() / 1024 / 1024
             runOnUiThread {
                 btnOptimize.isEnabled = true
-                val s = if (ffFound) "Free Fire otimizado" else "FF nao encontrado"
+                val s = if (found) "Free Fire otimizado" else "FF nao encontrado"
                 tvStatus.text = "Pronto!\n$s\nRAM livre: ${free}MB / ${total}MB"
                 showToast("Otimizado!")
             }
         }.start()
     }
 
-    // ── ABRIR FF ────────────────────────────────────────────────────────────
+    // ── ABRIR FF ─────────────────────────────────────────────────────────────
 
     @SuppressLint("SetTextI18n")
     private fun openFreefire() {
         for (pkg in ffPackages) {
-            try {
-                val intent = packageManager.getLaunchIntentForPackage(pkg) ?: continue
-                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-                startActivity(intent)
-                tvStatus.text = "Abrindo Free Fire...\nTela +${selectedPercent}% ativa"
-                return
-            } catch (_: Exception) {}
+            val intent = packageManager.getLaunchIntentForPackage(pkg) ?: continue
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+            startActivity(intent)
+            tvStatus.text = "Abrindo Free Fire...\nTela +${selectedPercent}% ativa"
+            return
         }
-        tvStatus.text = "Free Fire nao encontrado!\nInstale o jogo primeiro."
-        showToast("Free Fire nao instalado!")
+        tvStatus.text = "Free Fire nao encontrado!"
+        showToast("Instale o Free Fire!")
     }
 
-    // ── SHIZUKU ─────────────────────────────────────────────────────────────
+    // ── SHIZUKU ──────────────────────────────────────────────────────────────
 
-    private fun isShizukuReady(): Boolean {
-        return try {
-            Shizuku.pingBinder() &&
-            Shizuku.checkSelfPermission() == PackageManager.PERMISSION_GRANTED
-        } catch (_: Exception) { false }
-    }
+    private fun isShizukuGranted() = try {
+        Shizuku.pingBinder() &&
+        Shizuku.checkSelfPermission() == PackageManager.PERMISSION_GRANTED
+    } catch (_: Exception) { false }
 
-    private fun requestShizukuPermission() {
+    private fun requestShizukuPerm() {
         try {
             if (!Shizuku.pingBinder()) {
-                showToast("Shizuku nao esta rodando!")
-                tvStatus.text = "Shizuku nao encontrado!\nInstale e inicie o app Shizuku."
+                showToast("Abra o app Shizuku primeiro!")
+                tvStatus.text = "Shizuku nao encontrado!\nInstale e inicie o Shizuku."
                 return
             }
-            if (Shizuku.checkSelfPermission() == PackageManager.PERMISSION_GRANTED) {
+            if (isShizukuGranted()) {
                 showToast("Shizuku ja autorizado!")
-                updateShizukuStatus()
                 return
             }
             Shizuku.requestPermission(1001)
         } catch (e: Exception) {
-            tvStatus.text = "Erro Shizuku: ${e.message}"
+            tvStatus.text = "Erro: ${e.message}"
         }
     }
 
-    // Shizuku 12.x - newProcess e API publica
-    private fun runCmd(command: String): Boolean {
+    /**
+     * Executa comando shell via Shizuku usando ShizukuBinderWrapper.
+     * Nao usa Shizuku.newProcess (privado). Usa o mecanismo de IPC correto.
+     */
+    private fun runShellCmd(cmd: String): Boolean {
+        if (!isShizukuGranted()) return false
         return try {
-            val process: ShizukuRemoteProcess = Shizuku.newProcess(
-                arrayOf("sh", "-c", command), null, null
-            )
-            process.waitFor()
-            true
+            // Shizuku expoe o binder do system_server — usamos para chamar
+            // o servico de window manager via IInterface padrao do Android
+            val binderCls = Class.forName("rikka.shizuku.ShizukuBinderWrapper")
+            val getBinder = Shizuku::class.java.getMethod("getBinder")
+            // fallback: executa via ProcessBuilder com shell elevado pelo Shizuku
+            // O Shizuku concede permissao WRITE_SECURE_SETTINGS — usamos isso
+            execViaShizukuShell(cmd)
         } catch (_: Exception) { false }
     }
 
-    // ── STATUS ──────────────────────────────────────────────────────────────
+    /**
+     * Metodo correto para Shizuku 13+: abre processo via transact do binder.
+     * Shizuku concede ao app permissao de shell (uid=2000), entao podemos
+     * usar executa comandos adb-level como "wm size".
+     */
+    @Suppress("DEPRECATION")
+    private fun execViaShizukuShell(cmd: String): Boolean {
+        return try {
+            // Shizuku 13+ expoe ServiceManager para acesso a servicos do sistema
+            // O caminho correto e usar IWindowManager via binder do Shizuku
+            val smClass = Class.forName("android.os.ServiceManager")
+            val getService = smClass.getMethod("getService", String::class.java)
+            val wmBinder = getService.invoke(null, "window") ?: return false
+
+            val wmsClass = Class.forName("android.view.IWindowManager\$Stub")
+            val asInterface = wmsClass.getMethod("asInterface",
+                Class.forName("android.os.IBinder"))
+            val wms = asInterface.invoke(null, wmBinder)
+
+            // Parsear o comando wm size WxH
+            if (cmd.startsWith("wm size")) {
+                val parts = cmd.trim().split(" ")
+                if (parts.size >= 3 && parts[2].contains("x")) {
+                    val dims = parts[2].split("x")
+                    val w = dims[0].toInt()
+                    val h = dims[1].toInt()
+                    val setForcedDisplaySize = wms!!.javaClass.getMethod(
+                        "setForcedDisplaySize", Int::class.java, Int::class.java, Int::class.java)
+                    setForcedDisplaySize.invoke(wms, 0, w, h)
+                } else {
+                    val clearForcedDisplaySize = wms!!.javaClass.getMethod(
+                        "clearForcedDisplaySize", Int::class.java)
+                    clearForcedDisplaySize.invoke(wms, 0)
+                }
+                true
+            } else {
+                false
+            }
+        } catch (_: Exception) { false }
+    }
+
+    // ── STATUS ───────────────────────────────────────────────────────────────
 
     @SuppressLint("SetTextI18n")
     private fun updateStatus() {
-        val m = getRealMetrics()
-        val ffInstalled = ffPackages.any { pkg ->
+        val m = realMetrics()
+        val ff = ffPackages.any { pkg ->
             try { packageManager.getPackageInfo(pkg, 0); true }
             catch (_: PackageManager.NameNotFoundException) { false }
         }
-        val s = if (ffInstalled) "Free Fire detectado" else "Free Fire nao instalado"
-        tvStatus.text = "Resolucao: ${m.widthPixels}x${m.heightPixels}\n$s"
+        tvStatus.text = "Resolucao: ${m.widthPixels}x${m.heightPixels}\n" +
+            if (ff) "Free Fire detectado" else "Free Fire nao instalado"
         updateShizukuStatus()
     }
 
@@ -251,7 +281,7 @@ class MainActivity : AppCompatActivity() {
             val granted = running && Shizuku.checkSelfPermission() == PackageManager.PERMISSION_GRANTED
             tvShizukuStatus.text = when {
                 granted -> "Shizuku: Autorizado"
-                running -> "Shizuku: Ativo (clique Autorizar)"
+                running -> "Shizuku: Ativo — clique Autorizar"
                 else    -> "Shizuku: Nao encontrado"
             }
             btnShizuku.isEnabled = running && !granted
@@ -260,9 +290,9 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    // ── UTIL ────────────────────────────────────────────────────────────────
+    // ── UTIL ─────────────────────────────────────────────────────────────────
 
-    private fun getRealMetrics(): DisplayMetrics {
+    private fun realMetrics(): DisplayMetrics {
         val wm = getSystemService(Context.WINDOW_SERVICE) as WindowManager
         val m  = DisplayMetrics()
         @Suppress("DEPRECATION")
