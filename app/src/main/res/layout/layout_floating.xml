@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:gravity="end"
+    android:padding="8dp">
+
+    <!-- Painel expandido -->
+    <LinearLayout
+        android:id="@+id/floatPanel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:gravity="end"
+        android:visibility="gone"
+        android:layout_marginBottom="8dp">
+
+        <!-- Fechar -->
+        <TextView
+            android:id="@+id/fabClose"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:text="X"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:textColor="#FFFFFF"
+            android:gravity="center"
+            android:background="#CC333344"
+            android:layout_marginBottom="8dp" />
+
+        <!-- Restaurar -->
+        <TextView
+            android:id="@+id/fabRestore"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:text="RST"
+            android:textSize="9sp"
+            android:textStyle="bold"
+            android:textColor="#FFFFFF"
+            android:gravity="center"
+            android:background="#CC1A0A00"
+            android:layout_marginBottom="8dp" />
+
+        <!-- Esticar -->
+        <TextView
+            android:id="@+id/fabStretch"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:text="STR"
+            android:textSize="9sp"
+            android:textStyle="bold"
+            android:textColor="#FFFFFF"
+            android:gravity="center"
+            android:background="#CCFF4500"
+            android:layout_marginBottom="8dp" />
+
+    </LinearLayout>
+
+    <!-- Botao principal -->
+    <FrameLayout
+        android:id="@+id/fabMain"
+        android:layout_width="56dp"
+        android:layout_height="56dp"
+        android:background="#FFFF4500">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="LN"
+            android:textSize="14sp"
+            android:textStyle="bold"
+            android:textColor="#FFFFFF" />
+
+        <TextView
+            android:id="@+id/tvFloatPct"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom|center_horizontal"
+            android:text=""
+            android:textSize="7sp"
+            android:textColor="#FFDDAA" />
+
+    </FrameLayout>
+
+</LinearLayout>
