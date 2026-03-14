@@ -1,0 +1,773 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>YUTA SENSI X — Free Fire</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;700;800;900&family=Rajdhani:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --p:#8b00ff;--p2:#a020f0;--p3:#c060ff;--p4:#e0a0ff;
+  --c:#00e5ff;--c2:#40ffff;--c3:#80ffff;
+  --r:#ff1744;--r2:#ff4d6d;--r3:#ff8fa3;
+  --g:#00e676;--g2:#69ff94;
+  --y:#ffea00;--y2:#fff176;
+  --bg0:#030008;--bg1:#06000f;--bg2:#0a0018;--bg3:#0f0022;--bg4:#150030;
+  --sf:rgba(15,0,35,.88);--sf2:rgba(20,0,45,.92);--sf3:rgba(8,0,20,.95);
+  --bdp:rgba(139,0,255,.22);--bdp2:rgba(139,0,255,.42);
+  --bdc:rgba(0,229,255,.18);--bdc2:rgba(0,229,255,.38);
+  --t1:#f5eeff;--t2:#c8aaee;--t3:#8866bb;--t4:#442266;
+}
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{width:100%;min-height:100%;overflow-x:hidden}
+body{font-family:'Rajdhani',sans-serif;background:var(--bg0);color:var(--t1);min-height:100vh}
+
+#cv{position:fixed;inset:0;z-index:0;pointer-events:none}
+.noise{position:fixed;inset:0;z-index:1;pointer-events:none;opacity:.25;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.04'/%3E%3C/svg%3E")}
+
+::-webkit-scrollbar{width:4px}
+::-webkit-scrollbar-track{background:transparent}
+::-webkit-scrollbar-thumb{background:rgba(139,0,255,.4);border-radius:2px}
+
+/* ═══════════ LOGIN ═══════════ */
+#loginScreen{position:fixed;inset:0;z-index:999;display:flex;align-items:center;justify-content:center;padding:20px;overflow-y:auto}
+#loginScreen.hidden{display:none}
+.login-bg{position:absolute;inset:0;background:radial-gradient(ellipse 80% 70% at 50% -10%,rgba(139,0,255,.18) 0%,transparent 55%),radial-gradient(ellipse 60% 50% at 10% 110%,rgba(0,229,255,.08) 0%,transparent 55%),var(--bg0);z-index:0}
+
+.login-wrap{position:relative;z-index:2;width:100%;max-width:460px;animation:riseUp .7s cubic-bezier(.16,1,.3,1) both}
+@keyframes riseUp{from{opacity:0;transform:translateY(40px) scale(.96)}to{opacity:1;transform:translateY(0) scale(1)}}
+
+/* logo */
+.logo-zone{text-align:center;margin-bottom:36px}
+.logo-ring-outer{display:inline-flex;align-items:center;justify-content:center;position:relative;width:96px;height:96px;margin:0 auto 18px}
+.logo-hex{width:88px;height:88px;background:linear-gradient(135deg,var(--p),var(--c));clip-path:polygon(50% 0%,93% 25%,93% 75%,50% 100%,7% 75%,7% 25%);display:flex;align-items:center;justify-content:center;font-size:36px;position:relative;z-index:1;animation:hexGlow 3s ease-in-out infinite}
+@keyframes hexGlow{0%,100%{box-shadow:0 0 30px rgba(139,0,255,.5),0 0 60px rgba(0,229,255,.15)}50%{box-shadow:0 0 55px rgba(139,0,255,.8),0 0 100px rgba(0,229,255,.3)}}
+.logo-orbit{position:absolute;inset:-8px;border-radius:50%;border:1.5px solid rgba(139,0,255,.3);animation:orbit 6s linear infinite}
+.logo-orbit2{position:absolute;inset:-16px;border-radius:50%;border:1px dashed rgba(0,229,255,.18);animation:orbit 10s linear infinite reverse}
+@keyframes orbit{to{transform:rotate(360deg)}}
+
+.logo-name{font-family:'Orbitron',monospace;font-size:30px;font-weight:900;letter-spacing:6px;background:linear-gradient(90deg,var(--p3) 0%,var(--c2) 50%,var(--p3) 100%);background-size:200% auto;-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;animation:shimmer 3s linear infinite}
+@keyframes shimmer{0%{background-position:0% center}100%{background-position:200% center}}
+.logo-sub{font-size:11px;letter-spacing:4px;color:var(--t3);text-transform:uppercase;margin-top:5px}
+.logo-version{display:inline-block;background:linear-gradient(135deg,rgba(139,0,255,.2),rgba(0,229,255,.1));border:1px solid var(--bdp);border-radius:20px;padding:3px 12px;font-size:9px;font-family:'Orbitron',monospace;letter-spacing:2px;color:var(--p3);margin-top:8px}
+
+/* login card */
+.login-card{background:var(--sf);border:1px solid var(--bdp2);border-radius:24px;padding:40px 36px;backdrop-filter:blur(24px);position:relative;overflow:hidden;box-shadow:0 0 0 1px rgba(139,0,255,.08),0 40px 80px rgba(0,0,0,.7),inset 0 1px 0 rgba(255,255,255,.05)}
+.login-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,var(--p),var(--c),var(--p),transparent)}
+.login-card::after{content:'';position:absolute;bottom:-80px;right:-80px;width:220px;height:220px;background:radial-gradient(circle,rgba(0,229,255,.04) 0%,transparent 70%);border-radius:50%;pointer-events:none}
+
+.lf{margin-bottom:22px}
+.lf label{display:block;font-family:'Orbitron',monospace;font-size:8.5px;font-weight:700;letter-spacing:2.5px;color:var(--t3);text-transform:uppercase;margin-bottom:10px}
+.lf input{width:100%;background:rgba(0,0,0,.5);border:1.5px solid var(--bdp);border-radius:12px;padding:15px 18px;font-family:'JetBrains Mono',monospace;font-size:16px;font-weight:700;color:var(--t1);letter-spacing:4px;text-transform:uppercase;transition:all .25s;outline:none}
+.lf input::placeholder{color:var(--t4);letter-spacing:2px;font-size:12px;font-weight:400;text-transform:uppercase}
+.lf input:focus{border-color:var(--p);background:rgba(139,0,255,.08);box-shadow:0 0 0 3px rgba(139,0,255,.15),0 0 30px rgba(139,0,255,.1)}
+
+.err{background:rgba(255,23,68,.08);border:1px solid rgba(255,23,68,.3);border-left:3px solid var(--r);border-radius:8px;padding:13px 16px;font-size:13px;font-weight:600;color:var(--r3);margin-bottom:18px;display:none;animation:shake .3s ease}
+.err.show{display:block}
+@keyframes shake{0%,100%{transform:translateX(0)}20%,60%{transform:translateX(-7px)}40%,80%{transform:translateX(7px)}}
+
+.btn-enter{width:100%;padding:17px;background:linear-gradient(135deg,var(--p) 0%,var(--c) 100%);border:none;border-radius:12px;color:#000;font-family:'Orbitron',monospace;font-size:12px;font-weight:900;letter-spacing:4px;cursor:pointer;position:relative;overflow:hidden;transition:all .3s cubic-bezier(.16,1,.3,1)}
+.btn-enter::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(255,255,255,.2) 0%,transparent 55%)}
+.btn-enter .sh{position:absolute;top:-50%;left:-60%;width:25%;height:200%;background:linear-gradient(90deg,transparent,rgba(255,255,255,.3),transparent);transform:skewX(-20deg);animation:shA 3s ease-in-out infinite}
+@keyframes shA{0%{left:-60%}35%{left:130%}100%{left:130%}}
+.btn-enter:hover{transform:translateY(-3px);box-shadow:0 20px 60px rgba(139,0,255,.5),0 0 40px rgba(0,229,255,.2)}
+.btn-enter:active{transform:translateY(-1px)}
+
+/* ═══════════ APP ═══════════ */
+#appScreen{display:none;position:relative;z-index:2;min-height:100vh}
+#appScreen.active{display:block;animation:fadeIn .4s ease}
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+
+/* TOPBAR */
+.topbar{position:sticky;top:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:0 20px;height:66px;background:rgba(3,0,8,.94);border-bottom:1px solid var(--bdp);backdrop-filter:blur(28px);gap:12px;flex-wrap:wrap}
+.tb-brand{display:flex;align-items:center;gap:10px;flex-shrink:0}
+.tb-hex{width:36px;height:36px;background:linear-gradient(135deg,var(--p),var(--c));clip-path:polygon(50% 0%,93% 25%,93% 75%,50% 100%,7% 75%,7% 25%);display:flex;align-items:center;justify-content:center;font-size:14px;box-shadow:0 0 14px rgba(139,0,255,.45);flex-shrink:0}
+.tb-name{font-family:'Orbitron',monospace;font-size:15px;font-weight:900;letter-spacing:3px;background:linear-gradient(90deg,var(--p3),var(--c2));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.tb-sub{font-size:9px;letter-spacing:2.5px;color:var(--t4);text-transform:uppercase}
+.tb-right{display:flex;align-items:center;gap:8px}
+
+.timer-chip{display:flex;align-items:center;gap:7px;background:rgba(139,0,255,.1);border:1px solid rgba(139,0,255,.28);border-radius:8px;padding:7px 12px;font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:700;color:var(--p3);letter-spacing:1px;white-space:nowrap}
+.timer-dot{width:6px;height:6px;background:var(--c2);border-radius:50%;box-shadow:0 0 8px var(--c2);animation:blink 1.5s ease-in-out infinite;flex-shrink:0}
+@keyframes blink{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.3;transform:scale(.5)}}
+
+.btn-exit{display:flex;align-items:center;gap:5px;padding:7px 13px;background:rgba(255,23,68,.08);border:1px solid rgba(255,23,68,.22);border-radius:8px;color:var(--r3);font-family:'Rajdhani',sans-serif;font-size:13px;font-weight:700;cursor:pointer;transition:all .25s;white-space:nowrap}
+.btn-exit:hover{background:rgba(255,23,68,.18);border-color:rgba(255,23,68,.5)}
+
+/* CONTENT */
+.content{padding:20px 16px;max-width:1100px;margin:0 auto}
+
+/* PANEL */
+.panel{background:var(--sf);border:1px solid var(--bdp);border-radius:18px;overflow:hidden;margin-bottom:18px;transition:border-color .3s}
+.panel:hover{border-color:var(--bdp2)}
+.panel-head{display:flex;align-items:center;gap:12px;padding:18px 22px;border-bottom:1px solid var(--bdp);background:rgba(0,0,0,.2)}
+.ph-ico{width:32px;height:32px;background:linear-gradient(135deg,rgba(139,0,255,.25),rgba(0,229,255,.1));border:1px solid var(--bdp);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0}
+.ph-title{font-family:'Orbitron',monospace;font-size:10px;font-weight:700;letter-spacing:2px;color:var(--t1);text-transform:uppercase}
+.panel-body{padding:20px 22px}
+
+/* CONTROLS GRID */
+.ctrl-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:14px;margin-bottom:18px}
+.cg{display:flex;flex-direction:column;gap:7px}
+.cg label{font-family:'Orbitron',monospace;font-size:8px;letter-spacing:2px;color:var(--t3);text-transform:uppercase}
+.cg select,.cg input[type=text]{width:100%;background:rgba(0,0,0,.45);border:1.5px solid var(--bdp);border-radius:10px;padding:11px 14px;color:var(--t1);font-family:'Rajdhani',sans-serif;font-size:15px;font-weight:600;outline:none;transition:all .25s;appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%238b00ff' stroke-width='1.5' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 12px center;padding-right:34px}
+.cg input[type=text]{background-image:none;padding-right:14px;letter-spacing:.5px}
+.cg select:focus,.cg input:focus{border-color:var(--p);background-color:rgba(139,0,255,.07);box-shadow:0 0 0 3px rgba(139,0,255,.13)}
+
+/* DPI SECTION */
+.dpi-section{margin-bottom:18px}
+.dpi-label{font-family:'Orbitron',monospace;font-size:8px;letter-spacing:2px;color:var(--t3);text-transform:uppercase;margin-bottom:10px;display:block}
+.dpi-row{display:flex;gap:8px;flex-wrap:wrap}
+.dpi-btn{flex:1;min-width:90px;padding:10px 12px;background:rgba(0,229,255,.06);border:1.5px solid var(--bdc);border-radius:10px;color:var(--c3);font-family:'Rajdhani',sans-serif;font-size:13px;font-weight:700;cursor:pointer;transition:all .25s;text-align:center;letter-spacing:.5px}
+.dpi-btn:hover{background:rgba(0,229,255,.14);border-color:var(--bdc2)}
+.dpi-btn.active{background:rgba(0,229,255,.18);border-color:var(--c2);color:var(--c2);box-shadow:0 0 16px rgba(0,229,255,.2),inset 0 1px 0 rgba(0,229,255,.15)}
+
+/* GENERATE BUTTONS */
+.gen-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(110px,1fr));gap:10px}
+.gen-btn{padding:13px 10px;border:1.5px solid;border-radius:10px;background:transparent;font-family:'Rajdhani',sans-serif;font-size:13px;font-weight:700;cursor:pointer;transition:all .25s;display:flex;align-items:center;justify-content:center;gap:6px;letter-spacing:.3px}
+.gen-btn:hover{transform:translateY(-2px)}
+.gen-btn:active{transform:translateY(0)}
+.gb-agr{border-color:rgba(255,23,68,.3);color:var(--r2);background:rgba(255,23,68,.07)}
+.gb-agr:hover{border-color:rgba(255,23,68,.6);background:rgba(255,23,68,.15);box-shadow:0 8px 24px rgba(255,23,68,.15)}
+.gb-bal{border-color:rgba(139,0,255,.3);color:var(--p3);background:rgba(139,0,255,.07)}
+.gb-bal:hover{border-color:rgba(139,0,255,.6);background:rgba(139,0,255,.15);box-shadow:0 8px 24px rgba(139,0,255,.15)}
+.gb-def{border-color:rgba(0,229,255,.3);color:var(--c2);background:rgba(0,229,255,.07)}
+.gb-def:hover{border-color:rgba(0,229,255,.6);background:rgba(0,229,255,.15);box-shadow:0 8px 24px rgba(0,229,255,.15)}
+.gb-pack{border-color:rgba(255,234,0,.25);color:var(--y2);background:rgba(255,234,0,.06)}
+.gb-pack:hover{border-color:rgba(255,234,0,.5);background:rgba(255,234,0,.12);box-shadow:0 8px 24px rgba(255,234,0,.1)}
+
+/* TABS */
+.tabs-row{display:flex;gap:4px;padding:5px;background:rgba(0,0,0,.3);border-radius:12px;border:1px solid var(--bdp);margin-bottom:20px}
+.tab-btn{flex:1;padding:10px 12px;background:transparent;border:none;border-radius:8px;color:var(--t3);font-family:'Orbitron',monospace;font-size:8.5px;font-weight:700;letter-spacing:1.5px;cursor:pointer;transition:all .25s;white-space:nowrap;text-align:center}
+.tab-btn:hover{color:var(--t2);background:rgba(139,0,255,.08)}
+.tab-btn.active{background:linear-gradient(135deg,rgba(139,0,255,.22),rgba(0,229,255,.08));color:var(--t1);border:1px solid rgba(139,0,255,.28);box-shadow:0 0 14px rgba(139,0,255,.1)}
+.tab-content{display:none;animation:fadeIn .2s ease}
+.tab-content.active{display:block}
+
+/* CONFIG RESULT */
+.config-empty{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:60px 20px;gap:14px;color:var(--t4);border:2px dashed rgba(139,0,255,.12);border-radius:14px}
+.config-empty-ico{font-size:44px;opacity:.3}
+.config-empty p{font-size:14px;font-weight:600;letter-spacing:.5px}
+
+.config-box{animation:fadeIn .35s ease}
+.cfg-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:18px;padding-bottom:16px;border-bottom:1px solid rgba(139,0,255,.12);gap:12px;flex-wrap:wrap}
+.cfg-device{font-size:18px;font-weight:700;color:var(--t1);letter-spacing:.3px}
+.cfg-hz{font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--c2);font-weight:600;margin-top:2px}
+.cfg-type-badge{display:flex;align-items:center;gap:7px;padding:8px 16px;border-radius:10px;font-family:'Orbitron',monospace;font-size:9px;font-weight:700;letter-spacing:1.5px;border:1px solid;flex-shrink:0}
+.ctb-agr{background:rgba(255,23,68,.1);border-color:rgba(255,23,68,.3);color:var(--r2)}
+.ctb-bal{background:rgba(139,0,255,.1);border-color:rgba(139,0,255,.3);color:var(--p3)}
+.ctb-def{background:rgba(0,229,255,.1);border-color:rgba(0,229,255,.3);color:var(--c2)}
+
+/* VALUES GRID */
+.vals-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(110px,1fr));gap:10px;margin-bottom:18px}
+.vcard{background:rgba(0,0,0,.35);border:1px solid rgba(139,0,255,.15);border-radius:10px;padding:14px 10px;text-align:center;transition:all .25s;cursor:default;position:relative;overflow:hidden}
+.vcard::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--p),var(--c));opacity:0;transition:opacity .25s}
+.vcard:hover{border-color:rgba(139,0,255,.35);transform:translateY(-2px)}
+.vcard:hover::before{opacity:1}
+.vc-label{font-family:'Orbitron',monospace;font-size:7.5px;letter-spacing:1.5px;color:var(--t3);text-transform:uppercase;margin-bottom:8px}
+.vc-val{font-family:'Orbitron',monospace;font-size:26px;font-weight:900;line-height:1;background:linear-gradient(135deg,var(--p3),var(--c2));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.vc-val.special{background:linear-gradient(135deg,var(--y),var(--y2));-webkit-background-clip:text;background-clip:text}
+
+/* COPY BTN */
+.btn-copy-cfg{width:100%;padding:15px;background:linear-gradient(135deg,var(--p),var(--c));border:none;border-radius:12px;color:#000;font-family:'Orbitron',monospace;font-size:11px;font-weight:900;letter-spacing:3px;cursor:pointer;position:relative;overflow:hidden;transition:all .3s cubic-bezier(.16,1,.3,1)}
+.btn-copy-cfg::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(255,255,255,.18) 0%,transparent 55%)}
+.btn-copy-cfg:hover{transform:translateY(-2px);box-shadow:0 16px 48px rgba(139,0,255,.4),0 0 30px rgba(0,229,255,.2)}
+.btn-copy-cfg:active{transform:translateY(0)}
+
+/* DICAS */
+.dica-item{background:rgba(0,0,0,.3);border:1px solid rgba(0,229,255,.12);border-left:3px solid var(--c);border-radius:10px;padding:16px 18px;margin-bottom:12px;transition:all .25s}
+.dica-item:hover{border-color:rgba(0,229,255,.28);background:rgba(0,229,255,.04)}
+.dica-title{font-family:'Orbitron',monospace;font-size:9.5px;font-weight:700;letter-spacing:1.5px;color:var(--c2);text-transform:uppercase;margin-bottom:8px;display:flex;align-items:center;gap:8px}
+.dica-text{font-size:14px;color:var(--t2);line-height:1.6;font-weight:500}
+
+/* INFO TAB */
+.info-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.info-card{background:rgba(0,0,0,.3);border:1px solid var(--bdp);border-radius:10px;padding:14px 16px}
+.ic-label{font-family:'Orbitron',monospace;font-size:7.5px;letter-spacing:1.5px;color:var(--t4);text-transform:uppercase;margin-bottom:6px}
+.ic-val{font-family:'JetBrains Mono',monospace;font-size:15px;font-weight:700;color:var(--p3)}
+.ic-val.cyan{color:var(--c2)}
+.ic-val.gold{color:var(--y2)}
+.ic-val.green{color:var(--g2)}
+.status-dot-wrap{display:flex;align-items:center;gap:6px}
+.sdot{width:7px;height:7px;border-radius:50%;background:var(--g2);box-shadow:0 0 8px var(--g2);animation:blink 2s ease-in-out infinite}
+
+/* TOAST */
+.toast-wrap{position:fixed;top:78px;right:16px;z-index:9999;display:flex;flex-direction:column;gap:8px;pointer-events:none}
+.toast{display:flex;align-items:center;gap:10px;background:rgba(10,0,22,.97);border:1px solid var(--bdp);border-radius:10px;padding:12px 16px;font-size:14px;font-weight:600;color:var(--t1);backdrop-filter:blur(20px);box-shadow:0 8px 32px rgba(0,0,0,.5);animation:tIn .3s cubic-bezier(.16,1,.3,1) both;pointer-events:all;max-width:300px}
+.toast.ok{border-color:rgba(0,230,118,.35)}
+.toast.err{border-color:rgba(255,23,68,.35)}
+.toast.info{border-color:rgba(139,0,255,.35)}
+.toast.out{animation:tOut .3s ease forwards}
+@keyframes tIn{from{opacity:0;transform:translateX(18px)}to{opacity:1;transform:translateX(0)}}
+@keyframes tOut{from{opacity:1;transform:translateX(0)}to{opacity:0;transform:translateX(18px)}}
+
+/* HISTORY */
+.hist-item{background:rgba(0,0,0,.3);border:1px solid rgba(139,0,255,.12);border-radius:10px;padding:14px 16px;margin-bottom:10px;transition:all .25s;cursor:pointer}
+.hist-item:hover{border-color:rgba(139,0,255,.3);background:rgba(139,0,255,.04)}
+.hist-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;gap:8px;flex-wrap:wrap}
+.hist-device{font-size:14px;font-weight:700;color:var(--t1)}
+.hist-time{font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--t4);letter-spacing:.5px}
+.hist-vals{display:flex;gap:6px;flex-wrap:wrap}
+.hv{font-family:'JetBrains Mono',monospace;font-size:11px;background:rgba(139,0,255,.1);border:1px solid rgba(139,0,255,.2);border-radius:5px;padding:3px 7px;color:var(--p3)}
+
+@media(max-width:680px){
+  .topbar{padding:0 14px;height:60px}
+  .tb-sub{display:none}
+  .content{padding:14px 12px}
+  .ctrl-grid{grid-template-columns:1fr}
+  .panel-body{padding:16px}
+  .panel-head{padding:14px 16px}
+  .vals-grid{grid-template-columns:repeat(3,1fr);gap:8px}
+  .info-grid{grid-template-columns:1fr}
+  .tabs-row{overflow-x:auto}
+  .tab-btn{font-size:7.5px;padding:9px 8px}
+  .gen-row{grid-template-columns:1fr 1fr;gap:8px}
+  .login-card{padding:32px 22px}
+  .logo-name{font-size:25px;letter-spacing:4px}
+}
+</style>
+</head>
+<body>
+<canvas id="cv"></canvas>
+<div class="noise"></div>
+
+<!-- ═══ LOGIN ═══ -->
+<div id="loginScreen">
+  <div class="login-bg"></div>
+  <div class="login-wrap">
+    <div class="logo-zone">
+      <div class="logo-ring-outer">
+        <div class="logo-hex">🎯</div>
+        <div class="logo-orbit"></div>
+        <div class="logo-orbit2"></div>
+      </div>
+      <div class="logo-name">YUTA SENSI X</div>
+      <div class="logo-sub">Gerador de Sensibilidade Free Fire</div>
+      <div class="logo-version">v2.0</div>
+    </div>
+    <div class="login-card">
+      <div class="err" id="errBox"></div>
+      <div class="lf">
+        <label>🔑 Chave de Acesso</label>
+        <input type="text" id="keyInput" placeholder="LC-XXXXXX" autocomplete="off" onkeydown="if(event.key==='Enter')doLogin()">
+      </div>
+      <button class="btn-enter" onclick="doLogin()">
+        <span class="sh"></span>
+        ACESSAR AGORA
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ APP ═══ -->
+<div id="appScreen">
+  <!-- TOPBAR -->
+  <div class="topbar">
+    <div class="tb-brand">
+      <div class="tb-hex">🎯</div>
+      <div>
+        <div class="tb-name">YUTA SENSI X</div>
+        <div class="tb-sub">Free Fire</div>
+      </div>
+    </div>
+    <div class="tb-right">
+      <div class="timer-chip">
+        <span class="timer-dot"></span>
+        <span id="timerDisplay">--:--</span>
+      </div>
+      <button class="btn-exit" onclick="doLogout()">⏻ Sair</button>
+    </div>
+  </div>
+
+  <div class="content">
+
+    <!-- CONTROLES -->
+    <div class="panel">
+      <div class="panel-head">
+        <div class="ph-ico">⚙️</div>
+        <div class="ph-title">Configurar Dispositivo</div>
+      </div>
+      <div class="panel-body">
+        <div class="ctrl-grid">
+          <div class="cg">
+            <label>📱 Marca</label>
+            <select id="brand">
+              <option value="">— Selecione —</option>
+              <option value="Samsung">Samsung</option>
+              <option value="Xiaomi">Xiaomi</option>
+              <option value="Motorola">Motorola</option>
+              <option value="iPhone">iPhone</option>
+              <option value="Realme">Realme</option>
+              <option value="Redmi">Redmi</option>
+              <option value="Poco">Poco</option>
+              <option value="Vivo">Vivo</option>
+              <option value="Oppo">Oppo</option>
+              <option value="OnePlus">OnePlus</option>
+            </select>
+          </div>
+          <div class="cg">
+            <label>🔍 Modelo</label>
+            <input type="text" id="model" placeholder="Ex: Galaxy A55">
+          </div>
+          <div class="cg">
+            <label>📺 Taxa de Atualização</label>
+            <select id="hz">
+              <option value="60">60 Hz</option>
+              <option value="90">90 Hz</option>
+              <option value="120" selected>120 Hz</option>
+              <option value="144">144 Hz</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="dpi-section">
+          <span class="dpi-label">🎛 Sensibilidade DPI</span>
+          <div class="dpi-row">
+            <button class="dpi-btn" onclick="selectDPI('sem',this)">Sem DPI</button>
+            <button class="dpi-btn" onclick="selectDPI('baixa',this)">DPI Baixa</button>
+            <button class="dpi-btn active" onclick="selectDPI('media',this)">DPI Média</button>
+            <button class="dpi-btn" onclick="selectDPI('alta',this)">DPI Alta</button>
+          </div>
+        </div>
+
+        <div class="cg" style="margin-bottom:0">
+          <label>⚡ Gerar Configuração</label>
+          <div class="gen-row" style="margin-top:2px">
+            <button class="gen-btn gb-agr" onclick="doGenerate('agressivo')">🔴 Agressivo</button>
+            <button class="gen-btn gb-bal" onclick="doGenerate('balanceado')">🟣 Balanceado</button>
+            <button class="gen-btn gb-def" onclick="doGenerate('defensivo')">🔵 Defensivo</button>
+            <button class="gen-btn gb-pack" onclick="doGeneratePack()">📦 Pack</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- DISPLAY -->
+    <div class="panel">
+      <div class="panel-head">
+        <div class="ph-ico">📊</div>
+        <div class="ph-title">Resultados</div>
+      </div>
+      <div class="panel-body">
+        <div class="tabs-row">
+          <button class="tab-btn active" id="tab-sensi" onclick="switchTab('sensi')">SENSI X</button>
+          <button class="tab-btn" id="tab-hist" onclick="switchTab('hist')">HISTÓRICO</button>
+          <button class="tab-btn" id="tab-dicas" onclick="switchTab('dicas')">DICAS</button>
+          <button class="tab-btn" id="tab-info" onclick="switchTab('info')">INFO</button>
+        </div>
+
+        <!-- SENSI TAB -->
+        <div id="sensi-tab" class="tab-content active">
+          <div id="configDisplay">
+            <div class="config-empty">
+              <div class="config-empty-ico">🎯</div>
+              <p>Gere uma configuração acima</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- HISTORICO TAB -->
+        <div id="hist-tab" class="tab-content">
+          <div id="histDisplay">
+            <div class="config-empty">
+              <div class="config-empty-ico">🕐</div>
+              <p>Nenhum histórico ainda</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- DICAS TAB -->
+        <div id="dicas-tab" class="tab-content">
+          <div class="dica-item">
+            <div class="dica-title">🕹 Analógico + D-Boas</div>
+            <div class="dica-text">Atire puxando o analógico para esquerda ou direita. Com o personagem D-Boas equipado, as balas se espalham menos ao se mover atirando — enorme vantagem no clutch.</div>
+          </div>
+          <div class="dica-item">
+            <div class="dica-title">🤖 Treine em Bots</div>
+            <div class="dica-text">Pratique constantemente contra bots em movimento no modo treinamento. Foco em headshots com mira entre pescoço e peito do alvo para maximizar o dano.</div>
+          </div>
+          <div class="dica-item">
+            <div class="dica-title">🎯 Posição da Mira</div>
+            <div class="dica-text">Sempre mantenha a mira entre o pescoço e o peito do inimigo. Isso facilita os acertos e aumenta a chance de headshots naturais durante o spray.</div>
+          </div>
+          <div class="dica-item">
+            <div class="dica-title">👆 Botão de Atirar</div>
+            <div class="dica-text">Posicione o botão de atirar na metade inferior da tela. Isso melhora o controle de puxada e reduz a fadiga no dedo durante partidas longas.</div>
+          </div>
+          <div class="dica-item">
+            <div class="dica-title">🏆 Dica Extra</div>
+            <div class="dica-text">Combine todas as técnicas: analógico + D-Boas + mira correta + posição do botão. A consistência é mais importante que a velocidade — pratique devagar e acelere gradualmente.</div>
+          </div>
+        </div>
+
+        <!-- INFO TAB -->
+        <div id="info-tab" class="tab-content">
+          <div class="info-grid">
+            <div class="info-card">
+              <div class="ic-label">Status</div>
+              <div class="ic-val green">
+                <div class="status-dot-wrap"><span class="sdot"></span>Online</div>
+              </div>
+            </div>
+            <div class="info-card">
+              <div class="ic-label">Versão</div>
+              <div class="ic-val cyan">v2.0</div>
+            </div>
+            <div class="info-card">
+              <div class="ic-label">Tempo Restante</div>
+              <div class="ic-val" id="infoRemaining">—</div>
+            </div>
+            <div class="info-card">
+              <div class="ic-label">Expira em</div>
+              <div class="ic-val gold" id="infoExpiry">—</div>
+            </div>
+            <div class="info-card">
+              <div class="ic-label">Dispositivos</div>
+              <div class="ic-val cyan" id="infoDevices">— / —</div>
+            </div>
+            <div class="info-card">
+              <div class="ic-label">Criador</div>
+              <div class="ic-val">YUTA</div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- TOASTS -->
+<div class="toast-wrap" id="toastWrap"></div>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-app.js";
+import { getFirestore,collection,getDocs,doc,updateDoc } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-firestore.js";
+
+const fc={
+  apiKey:"AIzaSyDJxN_Yz-5d8lKpQwXyZ9mN_oP1qRsT2uV",
+  authDomain:"amaia-b058b.firebaseapp.com",
+  projectId:"amaia-b058b",
+  storageBucket:"amaia-b058b.firebasestorage.app",
+  messagingSenderId:"1001025531470",
+  appId:"1:1001025531470:web:da1771fee93ecd10f2dd1f",
+  measurementId:"G-HM73TJ8Y3M"
+};
+const app=initializeApp(fc);
+const db=getFirestore(app);
+
+let curDPI='media';
+let curCfg=null;
+let curKeyName=null;
+let curKeyData=null;
+let monitorTicker=null;
+let timerTicker=null;
+let history=[];
+
+Object.assign(window,{doLogin,doLogout,selectDPI,doGenerate,doGeneratePack,copyConfig,switchTab});
+
+/* ── CANVAS ── */
+(()=>{
+  const cv=document.getElementById('cv'),cx=cv.getContext('2d');
+  let W,H,pts=[];
+  const rz=()=>{W=cv.width=window.innerWidth;H=cv.height=window.innerHeight;};
+  const mk=()=>({x:Math.random()*W,y:Math.random()*H,r:Math.random()*1.1+.2,vx:(Math.random()-.5)*.25,vy:(Math.random()-.5)*.25,a:Math.random()*.3+.04,c:Math.random()>.5?'139,0,255':'0,229,255'});
+  rz();for(let i=0;i<60;i++)pts.push(mk());
+  window.addEventListener('resize',rz);
+  const draw=()=>{
+    cx.clearRect(0,0,W,H);
+    for(let i=0;i<pts.length;i++)for(let j=i+1;j<pts.length;j++){
+      const dx=pts[i].x-pts[j].x,dy=pts[i].y-pts[j].y,d=Math.hypot(dx,dy);
+      if(d<110){cx.strokeStyle=`rgba(139,0,255,${.04*(1-d/110)})`;cx.lineWidth=.5;cx.beginPath();cx.moveTo(pts[i].x,pts[i].y);cx.lineTo(pts[j].x,pts[j].y);cx.stroke();}
+    }
+    pts.forEach(p=>{
+      p.x+=p.vx;p.y+=p.vy;
+      if(p.x<0)p.x=W;if(p.x>W)p.x=0;if(p.y<0)p.y=H;if(p.y>H)p.y=0;
+      cx.beginPath();cx.arc(p.x,p.y,p.r,0,Math.PI*2);cx.fillStyle=`rgba(${p.c},${p.a})`;cx.fill();
+    });
+    requestAnimationFrame(draw);
+  };draw();
+})();
+
+/* ── TOAST ── */
+function toast(msg,type='info',ms=3000){
+  const icons={ok:'✅',err:'❌',info:'💜'};
+  const el=document.createElement('div');
+  el.className=`toast ${type}`;
+  el.innerHTML=`<span>${icons[type]}</span><span>${msg}</span>`;
+  document.getElementById('toastWrap').appendChild(el);
+  setTimeout(()=>{el.classList.add('out');setTimeout(()=>el.remove(),300);},ms);
+}
+
+/* ── LOGIN ── */
+function showErr(m){
+  const b=document.getElementById('errBox');
+  b.textContent=m;b.classList.add('show');
+  setTimeout(()=>b.classList.remove('show'),3500);
+}
+
+async function doLogin(){
+  const key=document.getElementById('keyInput').value.trim().toUpperCase();
+  if(!key){showErr('⚠️ Insira sua chave de acesso');return;}
+
+  try{
+    const snap=await getDocs(collection(db,'admins'));
+    let keyData=null,adminDocId=null;
+
+    for(const d of snap.docs){
+      const admin=d.data();
+      const found=(admin.keys||[]).find(k=>k.name===key);
+      if(found){keyData=found;adminDocId=d.id;break;}
+    }
+
+    if(!keyData){showErr('❌ Chave não encontrada');return;}
+    if(keyData.isPaused){showErr('⏸ Esta chave está pausada');return;}
+    if(keyData.expiresAt&&new Date()>=new Date(keyData.expiresAt)){showErr('⏰ Esta chave expirou');return;}
+
+    // device
+    let devId=localStorage.getItem('ysx_device');
+    if(!devId){devId='DEV-'+Math.random().toString(36).substr(2,14).toUpperCase();localStorage.setItem('ysx_device',devId);}
+    if(!keyData.registeredDevices)keyData.registeredDevices=[];
+    if(!keyData.registeredDevices.includes(devId)){
+      if(keyData.registeredDevices.length>=(keyData.deviceLimit||1)){showErr(`📱 Limite de ${keyData.deviceLimit||1} dispositivo(s) atingido`);return;}
+    }
+    if(!keyData.registeredDevices.includes(devId)){
+      keyData.registeredDevices.push(devId);
+      if(!keyData.firstUseAt){
+        keyData.firstUseAt=new Date().toISOString();
+        keyData.expiresAt=new Date(Date.now()+(keyData.days||1)*86400000).toISOString();
+      }
+      const adm=snap.docs.find(d=>d.id===adminDocId).data();
+      const upKeys=adm.keys.map(k=>k.id===keyData.id?keyData:k);
+      await updateDoc(doc(db,'admins',adminDocId),{keys:upKeys});
+    }
+
+    curKeyName=key;curKeyData=keyData;
+    localStorage.setItem('ysx_logged','true');
+    localStorage.setItem('ysx_key',key);
+    enterApp();
+  }catch(e){showErr('❌ Erro de conexão');}
+}
+
+function enterApp(){
+  document.getElementById('loginScreen').classList.add('hidden');
+  document.getElementById('appScreen').classList.add('active');
+  document.getElementById('keyInput').value='';
+  updateInfo();
+  startTimerTick();
+  startMonitor();
+}
+
+function doLogout(){
+  localStorage.removeItem('ysx_logged');
+  localStorage.removeItem('ysx_key');
+  curKeyName=null;curKeyData=null;curCfg=null;history=[];
+  if(monitorTicker)clearInterval(monitorTicker);
+  if(timerTicker)clearInterval(timerTicker);
+  document.getElementById('appScreen').classList.remove('active');
+  document.getElementById('loginScreen').classList.remove('hidden');
+}
+
+async function checkSaved(){
+  if(localStorage.getItem('ysx_logged')==='true'){
+    const k=localStorage.getItem('ysx_key');
+    if(!k){return;}
+    try{
+      const snap=await getDocs(collection(db,'admins'));
+      let kd=null;
+      for(const d of snap.docs){const f=(d.data().keys||[]).find(x=>x.name===k);if(f){kd=f;break;}}
+      if(kd&&!kd.isPaused&&kd.expiresAt&&new Date()<new Date(kd.expiresAt)){
+        curKeyName=k;curKeyData=kd;
+        enterApp();
+      }else{doLogout();}
+    }catch(e){doLogout();}
+  }
+}
+
+/* ── TIMER & INFO ── */
+function startTimerTick(){
+  if(timerTicker)clearInterval(timerTicker);
+  timerTicker=setInterval(tickTimer,1000);
+  tickTimer();
+}
+
+function tickTimer(){
+  if(!curKeyData||!curKeyData.expiresAt){document.getElementById('timerDisplay').textContent='—';return;}
+  const d=new Date(curKeyData.expiresAt)-new Date();
+  if(d<=0){toast('⏰ Sua chave expirou!','err');doLogout();return;}
+  const dd=Math.floor(d/86400000),hh=Math.floor((d%86400000)/3600000),mm=Math.floor((d%3600000)/60000),ss=Math.floor((d%60000)/1000);
+  const t=dd>0?`${dd}D ${hh}H ${mm}M`:hh>0?`${hh}H ${mm}M ${ss}S`:`${mm}M ${ss}S`;
+  document.getElementById('timerDisplay').textContent=t;
+  document.getElementById('infoRemaining').textContent=t;
+}
+
+function updateInfo(){
+  if(!curKeyData)return;
+  document.getElementById('infoExpiry').textContent=curKeyData.expiresAt?new Date(curKeyData.expiresAt).toLocaleString('pt-BR'):'Aguardando uso';
+  document.getElementById('infoDevices').textContent=`${(curKeyData.registeredDevices||[]).length} / ${curKeyData.deviceLimit||1}`;
+}
+
+function startMonitor(){
+  if(monitorTicker)clearInterval(monitorTicker);
+  monitorTicker=setInterval(async()=>{
+    try{
+      const snap=await getDocs(collection(db,'admins'));
+      let kd=null;
+      for(const d of snap.docs){const f=(d.data().keys||[]).find(x=>x.name===curKeyName);if(f){kd=f;break;}}
+      if(!kd){toast('Chave removida pelo admin','err');doLogout();}
+      else if(kd.isPaused){toast('Chave pausada pelo admin','err');doLogout();}
+      else if(kd.expiresAt&&new Date()>=new Date(kd.expiresAt)){toast('Chave expirada','err');doLogout();}
+      else{curKeyData=kd;updateInfo();}
+    }catch(e){}
+  },10000);
+}
+
+/* ── DPI ── */
+function selectDPI(dpi,btn){
+  curDPI=dpi;
+  document.querySelectorAll('.dpi-btn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+}
+
+/* ── GENERATE ── */
+function rnd(min,max,pct=50){
+  const range=max-min,center=min+Math.floor(range*(pct/100)),variance=Math.floor(range*.3);
+  return Math.min(Math.max(center+Math.floor((Math.random()-.5)*variance*2),min),max);
+}
+
+function doGenerate(type){
+  const brand=document.getElementById('brand').value;
+  const model=document.getElementById('model').value;
+  const hz=document.getElementById('hz').value;
+  if(!brand||!model){toast('⚠️ Selecione marca e modelo','err');return;}
+
+  const dpiR={
+    baixa:{sensi:[86,200],dpi:[360,550],botao:[30,50]},
+    media:{sensi:[85,200],dpi:[588,772],botao:[33,54]},
+    alta:{sensi:[87,200],dpi:[870,1440],botao:[30,55]},
+    sem:{sensi:[86,200],dpi:[0,0],botao:[30,50]}
+  };
+  const pct={agressivo:80,balanceado:50,defensivo:20}[type];
+  const r=dpiR[curDPI];
+
+  const cfg={
+    brand,model,hz,type,
+    geral:rnd(r.sensi[0],r.sensi[1],pct),
+    ponto:rnd(Math.max(r.sensi[0]-20,50),Math.min(r.sensi[1]-10,180),pct),
+    dois:rnd(137,200,pct),
+    quatro:rnd(137,200,pct),
+    awm:rnd(Math.max(r.sensi[0]-60,20),Math.min(r.sensi[1]-50,100),pct),
+    olha:rnd(Math.max(r.sensi[0]-10,80),Math.min(r.sensi[1]+10,200),pct),
+    dpi:curDPI==='sem'?0:rnd(r.dpi[0],r.dpi[1],pct),
+    botao:rnd(r.botao[0],r.botao[1],pct),
+    ts:new Date().toLocaleTimeString('pt-BR')
+  };
+
+  curCfg=cfg;
+  history.unshift(cfg);
+  if(history.length>10)history.pop();
+  renderConfig(cfg);
+  renderHistory();
+  toast('Configuração gerada!','ok',2000);
+}
+
+function doGeneratePack(){
+  const brand=document.getElementById('brand').value;
+  const model=document.getElementById('model').value;
+  if(!brand||!model){toast('⚠️ Selecione marca e modelo','err');return;}
+
+  let txt=`YUTA SENSI X — PACK COMPLETO\nModelo: ${brand} ${model}\nData: ${new Date().toLocaleString('pt-BR')}\n\n=== 10 CONFIGURAÇÕES ===\n\n`;
+  for(let i=0;i<10;i++){
+    const t=['agressivo','balanceado','defensivo'][i%3];
+    doGenerate(t);
+    if(curCfg){
+      txt+=`[${i+1}] ${t.toUpperCase()} | Geral:${curCfg.geral} Ponto:${curCfg.ponto} 2X:${curCfg.dois} 4X:${curCfg.quatro} AWM:${curCfg.awm} Olha:${curCfg.olha} DPI:${curCfg.dpi} Botão:${curCfg.botao}\n`;
+    }
+  }
+  txt+=`\n=== DICAS ===\n1. Puxe o analógico ao atirar\n2. Use D-Boas\n3. Mira entre pescoço e peito\n4. Botão atirar na parte inferior\n5. Pratique consistência`;
+
+  const a=document.createElement('a');
+  a.href='data:text/plain;charset=utf-8,'+encodeURIComponent(txt);
+  a.download=`YUTA_SENSI_X_${Date.now()}.txt`;
+  a.style.display='none';
+  document.body.appendChild(a);a.click();document.body.removeChild(a);
+  toast('📦 Pack baixado!','ok');
+}
+
+/* ── RENDER CONFIG ── */
+function renderConfig(cfg){
+  const tl={agressivo:'🔴 AGRESSIVO',balanceado:'🟣 BALANCEADO',defensivo:'🔵 DEFENSIVO'};
+  const tcls={agressivo:'ctb-agr',balanceado:'ctb-bal',defensivo:'ctb-def'};
+  document.getElementById('configDisplay').innerHTML=`
+  <div class="config-box">
+    <div class="cfg-header">
+      <div>
+        <div class="cfg-device">${cfg.brand} ${cfg.model}</div>
+        <div class="cfg-hz">${cfg.hz}Hz • ${cfg.ts}</div>
+      </div>
+      <div class="cfg-type-badge ${tcls[cfg.type]}">${tl[cfg.type]}</div>
+    </div>
+    <div class="vals-grid">
+      <div class="vcard"><div class="vc-label">Geral</div><div class="vc-val">${cfg.geral}</div></div>
+      <div class="vcard"><div class="vc-label">P. Vermelho</div><div class="vc-val">${cfg.ponto}</div></div>
+      <div class="vcard"><div class="vc-label">2X</div><div class="vc-val">${cfg.dois}</div></div>
+      <div class="vcard"><div class="vc-label">4X</div><div class="vc-val">${cfg.quatro}</div></div>
+      <div class="vcard"><div class="vc-label">AWM</div><div class="vc-val">${cfg.awm}</div></div>
+      <div class="vcard"><div class="vc-label">Olhadinha</div><div class="vc-val">${cfg.olha}</div></div>
+      <div class="vcard"><div class="vc-label">DPI</div><div class="vc-val special">${cfg.dpi===0?'—':cfg.dpi}</div></div>
+      <div class="vcard"><div class="vc-label">Botão atirar</div><div class="vc-val special">${cfg.botao}</div></div>
+    </div>
+    <button class="btn-copy-cfg" onclick="copyConfig()">📋 COPIAR CONFIGURAÇÃO</button>
+  </div>`;
+}
+
+function renderHistory(){
+  if(!history.length){
+    document.getElementById('histDisplay').innerHTML=`<div class="config-empty"><div class="config-empty-ico">🕐</div><p>Nenhum histórico ainda</p></div>`;
+    return;
+  }
+  const tl={agressivo:'🔴',balanceado:'🟣',defensivo:'🔵'};
+  document.getElementById('histDisplay').innerHTML=history.map((c,i)=>`
+    <div class="hist-item" onclick="showHistConfig(${i})">
+      <div class="hist-head">
+        <div class="hist-device">${tl[c.type]} ${c.brand} ${c.model} <span style="font-size:11px;color:var(--t4)">${c.hz}Hz</span></div>
+        <div class="hist-time">${c.ts}</div>
+      </div>
+      <div class="hist-vals">
+        <span class="hv">G:${c.geral}</span>
+        <span class="hv">P:${c.ponto}</span>
+        <span class="hv">2X:${c.dois}</span>
+        <span class="hv">4X:${c.quatro}</span>
+        <span class="hv">AWM:${c.awm}</span>
+        <span class="hv">DPI:${c.dpi||'—'}</span>
+      </div>
+    </div>`).join('');
+}
+
+window.showHistConfig=(i)=>{
+  if(history[i]){curCfg=history[i];renderConfig(history[i]);switchTab('sensi');}
+};
+
+function copyConfig(){
+  if(!curCfg)return;
+  const t=`YUTA SENSI X — ${curCfg.brand} ${curCfg.model} (${curCfg.hz}Hz)\n${curCfg.type.toUpperCase()}\n\nGeral: ${curCfg.geral}\nPonto Vermelho: ${curCfg.ponto}\n2X: ${curCfg.dois}\n4X: ${curCfg.quatro}\nAWM: ${curCfg.awm}\nOlhadinha: ${curCfg.olha}\nDPI: ${curCfg.dpi||0}\nBotão: ${curCfg.botao}`;
+  navigator.clipboard.writeText(t).catch(()=>{
+    const ta=document.createElement('textarea');ta.value=t;ta.style.cssText='position:fixed;opacity:0';
+    document.body.appendChild(ta);ta.select();document.execCommand('copy');document.body.removeChild(ta);
+  });
+  toast('✅ Configuração copiada!','ok');
+}
+
+/* ── TABS ── */
+function switchTab(tab){
+  document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
+  document.querySelectorAll('.tab-content').forEach(c=>c.classList.remove('active'));
+  document.getElementById('tab-'+tab).classList.add('active');
+  document.getElementById(tab+'-tab').classList.add('active');
+}
+
+/* ── BOOT ── */
+window.addEventListener('DOMContentLoaded',checkSaved);
+</script>
+</body>
+</html>
