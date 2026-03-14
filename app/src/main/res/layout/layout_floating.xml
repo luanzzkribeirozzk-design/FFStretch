@@ -1,0 +1,380 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content">
+
+    <!-- Painel completo - bordas redondas -->
+    <LinearLayout
+        android:id="@+id/floatPanel"
+        android:layout_width="280dp"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:background="@drawable/bg_float_panel"
+        android:visibility="gone"
+        android:layout_marginEnd="8dp"
+        android:elevation="12dp">
+
+        <!-- Header com particulas -->
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="58dp">
+
+            <com.lnstretch.ParticleView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_marginStart="14dp"
+                android:text="LN STRETCH"
+                android:textSize="17sp"
+                android:textStyle="bold"
+                android:textColor="#FFFFFF"
+                android:letterSpacing="0.12"
+                android:fontFamily="sans-serif-black" />
+
+            <!-- Minimizar -->
+            <TextView
+                android:id="@+id/fabMinimize"
+                android:layout_width="36dp"
+                android:layout_height="36dp"
+                android:layout_gravity="end|center_vertical"
+                android:layout_marginEnd="46dp"
+                android:text="_"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                android:textColor="#FFDDAA"
+                android:gravity="center" />
+
+            <!-- Fechar -->
+            <TextView
+                android:id="@+id/fabClose"
+                android:layout_width="36dp"
+                android:layout_height="36dp"
+                android:layout_gravity="end|center_vertical"
+                android:layout_marginEnd="8dp"
+                android:text="x"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                android:textColor="#FFAAAA"
+                android:gravity="center" />
+
+        </FrameLayout>
+
+        <!-- Shizuku -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:paddingStart="12dp"
+            android:paddingEnd="12dp"
+            android:paddingTop="8dp"
+            android:paddingBottom="8dp">
+
+            <TextView
+                android:id="@+id/tvFloatShizuku"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Shizuku: verificando..."
+                android:textSize="10sp"
+                android:textColor="#AAAACC" />
+
+            <Button
+                android:id="@+id/fabShizuku"
+                android:layout_width="wrap_content"
+                android:layout_height="28dp"
+                android:text="AUTORIZAR"
+                android:textSize="8sp"
+                android:textStyle="bold"
+                android:textColor="#FFFFFF"
+                android:paddingStart="8dp"
+                android:paddingEnd="8dp"
+                android:backgroundTint="#FF4500" />
+
+        </LinearLayout>
+
+        <!-- Status -->
+        <TextView
+            android:id="@+id/tvFloatStatus"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingStart="12dp"
+            android:paddingEnd="12dp"
+            android:paddingBottom="8dp"
+            android:text="Resolucao: --"
+            android:textSize="10sp"
+            android:textColor="#555577" />
+
+        <!-- Divider -->
+        <View android:layout_width="match_parent" android:layout_height="1dp" android:background="#111128" />
+
+        <!-- STRETCH SLIDER -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingStart="12dp"
+            android:paddingEnd="12dp"
+            android:paddingTop="10dp"
+            android:paddingBottom="6dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="STRETCH"
+                    android:textSize="8sp"
+                    android:textStyle="bold"
+                    android:textColor="#FF4500"
+                    android:letterSpacing="0.25" />
+
+                <TextView
+                    android:id="@+id/tvFloatPct"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="+15%"
+                    android:textSize="17sp"
+                    android:textStyle="bold"
+                    android:textColor="#FFFFFF"
+                    android:fontFamily="sans-serif-black" />
+
+            </LinearLayout>
+
+            <SeekBar
+                android:id="@+id/seekbarFloat"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:progressTint="#FF4500"
+                android:thumbTint="#FF6B00" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+                <TextView android:layout_width="0dp" android:layout_height="wrap_content"
+                    android:layout_weight="1" android:text="1%" android:textSize="8sp"
+                    android:textColor="#2A2A3E" android:gravity="start" />
+                <TextView android:layout_width="0dp" android:layout_height="wrap_content"
+                    android:layout_weight="1" android:text="40%" android:textSize="8sp"
+                    android:textColor="#2A2A3E" android:gravity="end" />
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <!-- DPI SLIDER -->
+        <View android:layout_width="match_parent" android:layout_height="1dp" android:background="#111128" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingStart="12dp"
+            android:paddingEnd="12dp"
+            android:paddingTop="10dp"
+            android:paddingBottom="6dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="DPI"
+                    android:textSize="8sp"
+                    android:textStyle="bold"
+                    android:textColor="#7C00FF"
+                    android:letterSpacing="0.25" />
+
+                <TextView
+                    android:id="@+id/tvFloatDpi"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="480"
+                    android:textSize="17sp"
+                    android:textStyle="bold"
+                    android:textColor="#CC88FF"
+                    android:fontFamily="sans-serif-black" />
+
+            </LinearLayout>
+
+            <SeekBar
+                android:id="@+id/seekbarDpi"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:progressTint="#7C00FF"
+                android:thumbTint="#AA44FF" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+                <TextView android:layout_width="0dp" android:layout_height="wrap_content"
+                    android:layout_weight="1" android:text="370" android:textSize="8sp"
+                    android:textColor="#2A2A3E" android:gravity="start" />
+                <TextView android:layout_width="0dp" android:layout_height="wrap_content"
+                    android:layout_weight="1" android:text="1440" android:textSize="8sp"
+                    android:textColor="#2A2A3E" android:gravity="end" />
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <!-- MODO -->
+        <View android:layout_width="match_parent" android:layout_height="1dp" android:background="#111128" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:paddingStart="10dp"
+            android:paddingEnd="10dp"
+            android:paddingTop="8dp"
+            android:paddingBottom="8dp">
+
+            <Button
+                android:id="@+id/btnModoLateral"
+                android:layout_width="0dp"
+                android:layout_height="36dp"
+                android:layout_weight="1"
+                android:layout_marginEnd="4dp"
+                android:text="LATERAIS"
+                android:textSize="9sp"
+                android:textStyle="bold"
+                android:textColor="#FFFFFF"
+                android:backgroundTint="#FF4500" />
+
+            <Button
+                android:id="@+id/btnModoVertical"
+                android:layout_width="0dp"
+                android:layout_height="36dp"
+                android:layout_weight="1"
+                android:layout_marginStart="4dp"
+                android:text="CIMA/BAIXO"
+                android:textSize="9sp"
+                android:textStyle="bold"
+                android:textColor="#AAAACC"
+                android:backgroundTint="#1A1A2E" />
+
+        </LinearLayout>
+
+        <!-- ESTICAR / RESTAURAR -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:paddingStart="10dp"
+            android:paddingEnd="10dp"
+            android:paddingBottom="6dp">
+
+            <Button
+                android:id="@+id/fabStretch"
+                android:layout_width="0dp"
+                android:layout_height="46dp"
+                android:layout_weight="1"
+                android:layout_marginEnd="4dp"
+                android:text="ESTICAR"
+                android:textSize="11sp"
+                android:textStyle="bold"
+                android:textColor="#FFFFFF"
+                android:backgroundTint="#FF4500" />
+
+            <Button
+                android:id="@+id/fabRestore"
+                android:layout_width="0dp"
+                android:layout_height="46dp"
+                android:layout_weight="1"
+                android:layout_marginStart="4dp"
+                android:text="RESTAURAR"
+                android:textSize="11sp"
+                android:textStyle="bold"
+                android:textColor="#FF4500"
+                android:backgroundTint="#1A0A00" />
+
+        </LinearLayout>
+
+        <!-- APLICAR DPI -->
+        <Button
+            android:id="@+id/fabApplyDpi"
+            android:layout_width="match_parent"
+            android:layout_height="42dp"
+            android:layout_marginStart="10dp"
+            android:layout_marginEnd="10dp"
+            android:layout_marginBottom="4dp"
+            android:text="APLICAR DPI"
+            android:textSize="11sp"
+            android:textStyle="bold"
+            android:textColor="#FFFFFF"
+            android:backgroundTint="#5500CC" />
+
+        <!-- RESTAURAR DPI -->
+        <Button
+            android:id="@+id/fabResetDpi"
+            android:layout_width="match_parent"
+            android:layout_height="36dp"
+            android:layout_marginStart="10dp"
+            android:layout_marginEnd="10dp"
+            android:layout_marginBottom="4dp"
+            android:text="RESTAURAR DPI"
+            android:textSize="10sp"
+            android:textStyle="bold"
+            android:textColor="#AA88FF"
+            android:backgroundTint="#120022" />
+
+        <!-- OTIMIZAR -->
+        <Button
+            android:id="@+id/fabOptimize"
+            android:layout_width="match_parent"
+            android:layout_height="42dp"
+            android:layout_marginStart="10dp"
+            android:layout_marginEnd="10dp"
+            android:layout_marginBottom="12dp"
+            android:text="OTIMIZAR FREE FIRE"
+            android:textSize="11sp"
+            android:textStyle="bold"
+            android:textColor="#FFFFFF"
+            android:backgroundTint="#2A006A" />
+
+    </LinearLayout>
+
+    <!-- Bolinha flutuante -->
+    <FrameLayout
+        android:id="@+id/fabMain"
+        android:layout_width="54dp"
+        android:layout_height="54dp"
+        android:layout_gravity="end"
+        android:elevation="16dp"
+        android:background="@drawable/bg_fab_circle">
+
+        <com.lnstretch.ParticleView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="LN"
+            android:textSize="14sp"
+            android:textStyle="bold"
+            android:textColor="#FFFFFF"
+            android:fontFamily="sans-serif-black" />
+
+    </FrameLayout>
+
+</FrameLayout>
