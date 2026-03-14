@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="108"
+    android:viewportHeight="108">
+
+    <!-- Background glow -->
+    <path android:fillColor="#1A0500"
+        android:pathData="M0,0 L108,0 L108,108 L0,108 Z"/>
+
+    <!-- Setas esticando para os lados - efeito stretch -->
+    <!-- Seta esquerda -->
+    <path android:fillColor="#FF4500"
+        android:pathData="M14,54 L34,40 L34,48 L74,48 L74,40 L94,54 L74,68 L74,60 L34,60 L34,68 Z"/>
+
+    <!-- LN no centro -->
+    <path android:fillColor="#FFFFFF"
+        android:pathData="M38,42 L38,66 L43,66 L43,56 L50,66 L55,66 L55,42 L50,42 L50,52 L43,42 Z"/>
+    <path android:fillColor="#FF4500"
+        android:pathData="M58,42 L58,66 L70,66 L70,62 L63,62 L63,42 Z"/>
+
+</vector>
